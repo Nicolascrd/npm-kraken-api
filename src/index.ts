@@ -105,7 +105,7 @@ const rawRequest = async (
     if (!error.length) {
       throw new Error("Kraken API returned an unknown error");
     }
-    throw new Error(error.join(", "))
+    throw new Error(error.join(", "));
   }
 
   return response;
@@ -157,7 +157,7 @@ export default class KrakenClient {
     const path = "/" + this.options.version + "/private/" + method;
     const url = this.options.url + path;
 
-    if (!params.hasOwnProperty("nonce")) {
+    if (!("nonce" in params)) {
       params.nonce = new Date().getTime() * 1000; // spoof microsecond
     }
 

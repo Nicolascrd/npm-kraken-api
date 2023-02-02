@@ -1,9 +1,18 @@
 {
-  "name": "kraken-api",
-  "version": "2.0.0",
+  "name": "ts-kraken-api",
+  "version": "1.0.0",
   "description": "Typed kraken.com API client library for NodeJS",
+  "license": "MIT",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
-    "tsc": "tsc"
+    "build": "tsc",
+    "install": "npm run build"
   },
   "keywords": [
     "kraken",
@@ -11,25 +20,25 @@
     "btc",
     "bitcoin"
   ],
-  "author": "Robert Myers (https://github.com/nothingisdead)",
+  "author": "Nicolas Couraud (https://github.com/nicolascrd)",
   "contributors": [
-    "Nicolas Couraud (https://github.com/nicolascrd"
+    "Robert Myers (https://github.com/nothingisdead)"
   ],
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nicolascrd/npm-kraken-api"
+  },
   "dependencies": {
     "got": "^12",
     "qs": "^6.9.4",
     "ts-node": "^10.9.1"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "engines": {
-    "node": ">=14"
-  },
-  "type": "module",
   "readmeFilename": "README.md",
   "devDependencies": {
     "@types/qs": "^6.9.7",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "eslint": "^8.33.0",
     "typescript": "^4.9.4"
   }
 }

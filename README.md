@@ -2,12 +2,12 @@
 
 NodeJS Client Library for the Kraken (kraken.com) API
 
-This is an asynchronous node ts client for the kraken.com API. It exposes all the API methods found here: https://www.kraken.com/help/api through the `api` method.
+This is an asynchronous node client for the kraken.com API. It exposes all the API methods found here: https://www.kraken.com/help/api through the `publicMethod` and `privateMethod` methods.
 
 ### Installation
 
 ```bash
-npm install https://github.com/Nicolascrd/npm-kraken-api
+npm install Nicolascrd/npm-kraken-api
 ```
 
 ### Example Usage:
@@ -26,39 +26,6 @@ const kraken = new KrakenClient(key, secret);
   console.log(await kraken.api("Ticker", { pair: "XXBTZUSD" }));
 })();
 ```
-
-### Updates:
-
-#### 2.0.0:
-- Typescript
-
-#### 1.0.1:
-
-- Update dependencies
-- Update required NodeJS version: [#42](https://github.com/nothingisdead/npm-kraken-api/pull/42)
-- Add GetWebSocketsToken private method: [#65](https://github.com/nothingisdead/npm-kraken-api/pull/65)
-- Update README: [#44](https://github.com/nothingisdead/npm-kraken-api/pull/44)
-
-#### 1.0.0:
-
-- All methods return a promise.
-- The second argument (parameters) can be omitted.
-- The third argument to the constructor can be an object (configuration) or a string (OTP), for backwards compatibility.
-
-#### 0.1.0:
-
-The callback passed to the `api` function conforms to the Node.js standard of
-
-```typescript
-function(error, data) {
-	// ...
-}
-```
-
-Thanks to @tehsenaus and @petermrg for pointing this out.
-
 ### Credit:
-
-I used the example php implementation at https://github.com/payward/kraken-api-client and the python implementation at https://github.com/veox/python3-krakenex as references.
 
 Forked from https://github.com/nothingisdead/npm-kraken-api 
