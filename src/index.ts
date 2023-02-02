@@ -50,13 +50,7 @@ const defaults: DefaultOptions = {
   timeout: 5000,
 };
 
-interface KrakenClientOptions {
-  otp: string; // Two-factor password (optional) (also, doesn't work)
-  timeout: number | undefined; // Maximum timeout (in milliseconds) for all API-calls (passed to `request`)
-}
-
 interface Options {
-  otp: string;
   timeout: number;
   url: string;
   version: number;
@@ -73,8 +67,11 @@ const getMessageSignature = (
   const secret_buffer = new Buffer(secret, "base64");
   const hash = createHash("sha256");
   const hmac = createHmac("sha512", secret_buffer);
-  const hash_digest = hash.update(nonce + message).digest("base64");
-  const hmac_digest = hmac.update(path + hash_digest, "utf8").digest("base64");
+  // any type for TS as for some reason "binary" is not a valid Encoding value in .d.ts file whereas the module actually supports it
+  const hash_digest = hash.update(nonce + message).digest("binary" as any);
+  const hmac_digest = hmac
+    .update(path + hash_digest, "binary" as any)
+    .digest("base64");
 
   return hmac_digest;
 };
@@ -88,14 +85,16 @@ const rawRequest = async (
 ) => {
   // Set custom User-Agent string
   headers["User-Agent"] = "Kraken Javascript API Client";
+  headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8";
 
-  const options = { headers, timeout };
+  const options = { headers, timeout: { send: timeout } };
 
   Object.assign(options, {
     method: "POST",
     body: stringify(data),
   });
-  const { body } = await got(url, options as any);
+  console.log("URL OPTIONS", url, options);
+  const { body } = await got.post(url, options);
   const response = JSON.parse(body);
 
   if (response.error && response.error.length) {
@@ -106,8 +105,7 @@ const rawRequest = async (
     if (!error.length) {
       throw new Error("Kraken API returned an unknown error");
     }
-
-    throw new Error(error.join(", "));
+    throw new Error(error.join(", "))
   }
 
   return response;
@@ -118,21 +116,11 @@ export default class KrakenClient {
   secret: string; // API Secret
   options: Options;
 
-  constructor(
-    key: string,
-    secret: string,
-    options: string | KrakenClientOptions
-  ) {
-    // Allow passing the OTP as the third argument for backwards compatibility
-    if (typeof options === "string") {
-      options = { otp: options, timeout: undefined };
-    }
-
+  constructor(key: string, secret: string, timeout = 5000) {
     this.key = key;
     this.secret = secret;
     this.options = {
-      otp: options.otp,
-      timeout: options.timeout ? options.timeout : defaults.timeout,
+      timeout: timeout ? timeout : defaults.timeout,
       version: defaults.version,
       url: defaults.url,
     };
@@ -171,10 +159,6 @@ export default class KrakenClient {
 
     if (!params.hasOwnProperty("nonce")) {
       params.nonce = new Date().getTime() * 1000; // spoof microsecond
-    }
-
-    if (this.options.otp !== undefined) {
-      params.otp = this.options.otp;
     }
 
     const signature = getMessageSignature(
