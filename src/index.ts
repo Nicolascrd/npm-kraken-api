@@ -105,7 +105,7 @@ const rawRequest = async (
     if (!error.length) {
       throw new Error("Kraken API returned an unknown error");
     }
-    console.error(error.length);
+    throw new Error(error.join(", "))
   }
 
   return response;
