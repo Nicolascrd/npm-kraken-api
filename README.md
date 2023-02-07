@@ -10,22 +10,35 @@ This is an asynchronous node client for the kraken.com API. It exposes all the A
 npm install Nicolascrd/npm-kraken-api
 ```
 
-### Example Usage:
+### Example Usage Private Method:
 
 ```typescript
 const key = "..."; // API Key
 const secret = "..."; // API Private Key
-import { KrakenClient } from "kraken-api";
+import { KrakenClient } from "ts-kraken-api";
 const kraken = new KrakenClient(key, secret);
 
 (async () => {
   // Display user's balance
-  console.log(await kraken.api("Balance"));
-
-  // Get Ticker Info
-  console.log(await kraken.api("Ticker", { pair: "XXBTZUSD" }));
+  const options = {}
+  const callback = () => undefined;
+  console.log(await kraken.privateMethod("Balance", options, callback));
 })();
+```
+
+### Example Usage Public Method:
+
+```typescript
+import { KrakenClient } from "ts-kraken-api";
+const kraken = new KrakenClient("", "");
+
+(async () => {
+  // Get Ticker Info
+  const options = {pair: "XXBTZUSD"}
+  const callback = () => undefined
+  console.log(await kraken.api("Ticker", options, callback));
+})
 ```
 ### Credit:
 
-Forked from https://github.com/nothingisdead/npm-kraken-api 
+Forked from https://github.com/nothingisdead/npm-kraken-api
